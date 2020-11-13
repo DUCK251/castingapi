@@ -74,7 +74,6 @@ Setting the `DATABASE_URL` variable will set `SQLALCHEMY_DATABASE_URI` in config
 |release_date|date|not null, input string format "%Y-%m-%d" ex)"2020-11-12"|
 |company|string|not null|
 |description|string||
-|||
 
 ### GET /movies
 
@@ -247,7 +246,6 @@ curl \
 |min_age|int|not null|
 |max_age|int|not null|
 |description|string||
-|||
 
 ### GET /roles
 
@@ -401,7 +399,6 @@ curl \
 |image_link|string|URL|
 |phone|string|ex)'+1-202-555-0169'|
 |email|string|ex)'udacity@casitng.com'|
-|||
 
 GENDER_TYPE = [
     'male',

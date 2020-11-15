@@ -8,9 +8,8 @@ from models import db, Actor, Movie, Role
 '''
 DIRECTOR_TOKEN can be expired
 '''
-DIRECTOR_TOKEN = 'Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IktpQ3ZwMmZaZXdfMlJwemxaSUR2QiJ9.eyJpc3MiOiJodHRwczovL2Rldi1ocm12dmE5Yi51cy5hdXRoMC5jb20vIiwic3ViIjoiYXV0aDB8NWZhOTZlMzY4N2E3OWIwMDZlMzM3MzViIiwiYXVkIjoiY2FzdGluZyIsImlhdCI6MTYwNTAwNDU4NSwiZXhwIjoxNjA1MDExNzg1LCJhenAiOiIybE9EeWI0THBmTlFqV1F1UDd6ZTJMWlRJd3I3VVNQOSIsInNjb3BlIjoiIiwicGVybWlzc2lvbnMiOlsiZGVsZXRlOmFjdG9ycyIsImRlbGV0ZTpyb2xlcyIsImdldDphY3RvcnMiLCJnZXQ6bW92aWVzIiwiZ2V0OnJvbGVzIiwicGF0Y2g6YWN0b3JzIiwicGF0Y2g6bW92aWVzIiwicGF0Y2g6cm9sZXMiLCJwb3N0OmFjdG9ycyIsInBvc3Q6cm9sZXMiXX0.ZuASNH619fhqkgZYKOQn5n8cUsxJuhTOBuRZDZKiEozulxMs-h-pc5GQ68j5xQjU7_JBCT_j5GFRteCFtXgzIVM570sEJ-GPmMewtgXg9bvnycL8htix_oPHfctk_MqxQwS3eOAPKOqwOkyz-elHEIoJP8Kum9xDhvBdWxQSdSJoWorHlmyqIIwb0a4Ncw_JdJHBnmnxviF0PFh8NEf-8GrUOlmfZZESknCwC2iKCJ6K8UwvkPKSeSRnbxUNKeISLe2VPweJr0qHDP6FOdejNp_Q1vLjoeZaxnA30UEV1OaZ6LCeYREZv3-2zi7yS3FQtsaq0yk9ZaqCWUd0jTxU2w'
-DIRECTOR_HEADER = {'Authorization': DIRECTOR_TOKEN}
-HEADER = DIRECTOR_HEADER
+DIRECTOR_TOKEN = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IktpQ3ZwMmZaZXdfMlJwemxaSUR2QiJ9.eyJpc3MiOiJodHRwczovL2Rldi1ocm12dmE5Yi51cy5hdXRoMC5jb20vIiwic3ViIjoiYXV0aDB8NWZhOTZlMzY4N2E3OWIwMDZlMzM3MzViIiwiYXVkIjoiY2FzdGluZyIsImlhdCI6MTYwNTI2NzM4NCwiZXhwIjoxNjA1MzUzNzg0LCJhenAiOiIybE9EeWI0THBmTlFqV1F1UDd6ZTJMWlRJd3I3VVNQOSIsInNjb3BlIjoiIiwicGVybWlzc2lvbnMiOlsiZGVsZXRlOmFjdG9ycyIsImRlbGV0ZTpyb2xlcyIsImdldDphY3RvcnMiLCJnZXQ6bW92aWVzIiwiZ2V0OnJvbGVzIiwicGF0Y2g6YWN0b3JzIiwicGF0Y2g6bW92aWVzIiwicGF0Y2g6cm9sZXMiLCJwb3N0OmFjdG9ycyIsInBvc3Q6cm9sZXMiXX0.GpBT_6iziCILLgq5U7b2XJpbjh_fFcgHdzGuPd8yvm330ZayJdGQEsgoIZrHWx6mgJjzsFvqCGNyDYY7KaDEUXDv-3cu8xhhk_oIyyvNOmoWj8ieIeyLsQ-FEExKx6krNnLqfC20g6-T4-cMj53LRQWMZ1BSBERnsNtLZyBL9sPa33URO1_M1FhT4AF50oETPD3zYgtEsCxt7kq0yS8No-YCDXyahPuBG_0Zs2uBAQK8WQwKcGt6iU1-JCc1gi51ISP66Uh8L-1e3gs9crdWPvfv1jZg79F4nJBW6gROrmzg4m9V1-UF0rpKRKxYJlR1Dq3VsilmXSZVeIipDpQE8A'
+HEADER = {'Authorization': f'Bearer {DIRECTOR_TOKEN}'}
 
 
 class AppTestCase(unittest.TestCase):
@@ -107,6 +106,28 @@ class AppTestCase(unittest.TestCase):
         self.assertTrue(data['success'])
         for actor in data['actors']:
             self.assertTrue(actor['passport'])
+
+    def test_get_roles_of_actor(self):
+        new_actor = Actor(**AppTestCase.test_actor)
+        new_actor.insert()
+        actor_id = new_actor.id
+
+        res = self.client().get(f'/actors/{actor_id}/roles')
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 200)
+        self.assertTrue(data['success'])
+        self.assertEqual(data['id'], actor_id)
+
+    def test_error_get_roles_of_actor_by_invalid_id(self):
+        actor_id = 987654321
+
+        res = self.client().get(f'/actors/{actor_id}/roles')
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 422)
+        self.assertFalse(data['success'])
+        self.assertEqual(data['message'], 'Invalid actor id')
 
     def test_create_actor(self):
         res = self.client().post('/actors', json=AppTestCase.test_actor, headers=HEADER)
@@ -259,6 +280,28 @@ class AppTestCase(unittest.TestCase):
         self.assertEqual(res.status_code, 200)
         self.assertTrue(data['success'])
         self.assertEqual(len(data['movies']), 4)
+
+    def test_get_roles_of_movie(self):
+        new_movie = Movie(**AppTestCase.test_movie)
+        new_movie.insert()
+        movie_id = new_movie.id
+
+        res = self.client().get(f'/movies/{movie_id}/roles')
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 200)
+        self.assertTrue(data['success'])
+        self.assertEqual(data['id'], movie_id)
+
+    def test_error_get_roles_of_movie_by_invalid_id(self):
+        movie_id = 987654321
+
+        res = self.client().get(f'/movies/{movie_id}/roles')
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 422)
+        self.assertFalse(data['success'])
+        self.assertEqual(data['message'], 'Invalid movie id')
 
     def test_create_movie(self):
         '''

@@ -63,6 +63,29 @@ def get_actors():
         abort(422)
 
 
+@app.route('/actors/<int:actor_id>/roles', methods=['GET'])
+def get_roles_of_actor(actor_id):
+    try:
+        actor = Actor.query.filter(Actor.id == actor_id).one_or_none()
+        if actor is None:
+            raise AssertionError('Invalid actor id')
+    except AssertionError as e:
+        return jsonify({
+            'success': False,
+            'error': 422,
+            'message': str(e)
+        }), 422
+    try:
+        roles = [role.format() for role in actor.roles]
+        return jsonify({
+            'success': True,
+            'id': actor_id,
+            'roles': roles
+        })
+    except:
+        abort(422)
+
+
 @app.route('/actors', methods=['POST'])
 @requires_auth('post:actors')
 def post_actor(payload):
@@ -145,6 +168,29 @@ def get_movies():
             'success': True,
             'movies': movies,
             'total_movies': total_movies_count,
+        })
+    except:
+        abort(422)
+
+
+@app.route('/movies/<int:movie_id>/roles', methods=['GET'])
+def get_roles_of_movie(movie_id):
+    try:
+        movie = Movie.query.filter(Movie.id == movie_id).one_or_none()
+        if movie is None:
+            raise AssertionError('Invalid movie id')
+    except AssertionError as e:
+        return jsonify({
+            'success': False,
+            'error': 422,
+            'message': str(e)
+        }), 422
+    try:
+        roles = [role.format() for role in movie.roles]
+        return jsonify({
+            'success': True,
+            'id': movie_id,
+            'roles': roles
         })
     except:
         abort(422)

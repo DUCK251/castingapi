@@ -8,9 +8,8 @@ from models import db, Actor, Movie, Role
 '''
 PRODUCER_TOKEN can be expired
 '''
-PRODUCER_TOKEN = 'Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IktpQ3ZwMmZaZXdfMlJwemxaSUR2QiJ9.eyJpc3MiOiJodHRwczovL2Rldi1ocm12dmE5Yi51cy5hdXRoMC5jb20vIiwic3ViIjoiZ29vZ2xlLW9hdXRoMnwxMTY3MTg5NTY4ODEwMjExNDc0MjEiLCJhdWQiOlsiY2FzdGluZyIsImh0dHBzOi8vZGV2LWhybXZ2YTliLnVzLmF1dGgwLmNvbS91c2VyaW5mbyJdLCJpYXQiOjE2MDUwOTQ1MjksImV4cCI6MTYwNTE4MDkyOSwiYXpwIjoiMmxPRHliNExwZk5RaldRdVA3emUyTFpUSXdyN1VTUDkiLCJzY29wZSI6Im9wZW5pZCBwcm9maWxlIGVtYWlsIiwicGVybWlzc2lvbnMiOlsiZGVsZXRlOmFjdG9ycyIsImRlbGV0ZTptb3ZpZXMiLCJkZWxldGU6cm9sZXMiLCJnZXQ6YWN0b3JzIiwiZ2V0Om1vdmllcyIsImdldDpyb2xlcyIsInBhdGNoOmFjdG9ycyIsInBhdGNoOm1vdmllcyIsInBhdGNoOnJvbGVzIiwicG9zdDphY3RvcnMiLCJwb3N0Om1vdmllcyIsInBvc3Q6cm9sZXMiXX0.YZpmXx9AFst3oFU2A6BUrHrOLGTguVa78loqI2luNvh7oW3o6dAC0Gx1KmIuEsMHFdccv5912foCw6z4TdRr_-kKf_EUiWZSezezGt5lZ2V_SWli4NwYKs9Sl97vEU0w17x3zAP-5wSNW2RaJ8fqX-bLmC8siqyctynvF05poV2vfeJ9pdwz4Olg38s_qqwohR8ikHf2PWNk6gEWBzxh29BFdBUSyRVHWy4OavV3NUMvoudoNniTlGjo1fAJIh-mGLLSDXM-Wwp_acJ4pxgHL7yVeeYomE5BLp2-sUM4u5E1MeRb_MxhHy0WW253GxfPZEqflh3WGmBIJUZqa4-oBQ'
-PRODUCER_HEADER = {'Authorization': PRODUCER_TOKEN}
-HEADER = PRODUCER_HEADER
+PRODUCER_TOKEN = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IktpQ3ZwMmZaZXdfMlJwemxaSUR2QiJ9.eyJpc3MiOiJodHRwczovL2Rldi1ocm12dmE5Yi51cy5hdXRoMC5jb20vIiwic3ViIjoiZ29vZ2xlLW9hdXRoMnwxMTY3MTg5NTY4ODEwMjExNDc0MjEiLCJhdWQiOlsiY2FzdGluZyIsImh0dHBzOi8vZGV2LWhybXZ2YTliLnVzLmF1dGgwLmNvbS91c2VyaW5mbyJdLCJpYXQiOjE2MDUyNjcyNzYsImV4cCI6MTYwNTM1MzY3NiwiYXpwIjoiMmxPRHliNExwZk5RaldRdVA3emUyTFpUSXdyN1VTUDkiLCJzY29wZSI6Im9wZW5pZCBwcm9maWxlIGVtYWlsIiwicGVybWlzc2lvbnMiOlsiZGVsZXRlOmFjdG9ycyIsImRlbGV0ZTptb3ZpZXMiLCJkZWxldGU6cm9sZXMiLCJnZXQ6YWN0b3JzIiwiZ2V0Om1vdmllcyIsImdldDpyb2xlcyIsInBhdGNoOmFjdG9ycyIsInBhdGNoOm1vdmllcyIsInBhdGNoOnJvbGVzIiwicG9zdDphY3RvcnMiLCJwb3N0Om1vdmllcyIsInBvc3Q6cm9sZXMiXX0.jcndpt3XqNHZC2XyKEVHOac0S1U4cZFKvtyTTApFwhKYIUVa2p9p-wf1V2GokGNqd2awqhfZJna4YCG3Ea7g-PWRXyuNIJEA-2LRItnlJGUyPDcZ1zOZSC4ARZeKv1h8XKZd3B8hQqOVM5czP9YB8T1ONQQYHA_6OiUKONsfcw1N1QKXI7h8RwW7MKXQeUzjlSFOkiESQFh3M2Rj6_i2oQmBOXdXRlX_aNNTcfUDoPRIs1wxOAKh9GI0mp7DoefnkT9L3tNrWXBEvRJCb77N1uazdB9fzBvZANzyBoKVz2UNaLUFP0OyWfny-8JQK3P7mGngt_Dq02Rrwsjd9BGcYQ'
+HEADER = {'Authorization': f'Bearer {PRODUCER_TOKEN}'}
 
 
 class AppTestCase(unittest.TestCase):
@@ -107,6 +106,28 @@ class AppTestCase(unittest.TestCase):
         self.assertTrue(data['success'])
         for actor in data['actors']:
             self.assertTrue(actor['passport'])
+
+    def test_get_roles_of_actor(self):
+        new_actor = Actor(**AppTestCase.test_actor)
+        new_actor.insert()
+        actor_id = new_actor.id
+
+        res = self.client().get(f'/actors/{actor_id}/roles')
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 200)
+        self.assertTrue(data['success'])
+        self.assertEqual(data['id'], actor_id)
+
+    def test_error_get_roles_of_actor_by_invalid_id(self):
+        actor_id = 987654321
+
+        res = self.client().get(f'/actors/{actor_id}/roles')
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 422)
+        self.assertFalse(data['success'])
+        self.assertEqual(data['message'], 'Invalid actor id')
 
     def test_create_actor(self):
         res = self.client().post('/actors', json=AppTestCase.test_actor, headers=HEADER)
@@ -259,11 +280,33 @@ class AppTestCase(unittest.TestCase):
         self.assertTrue(data['success'])
         self.assertEqual(len(data['movies']), 4)
 
+    def test_get_roles_of_movie(self):
+        new_movie = Movie(**AppTestCase.test_movie)
+        new_movie.insert()
+        movie_id = new_movie.id
+
+        res = self.client().get(f'/movies/{movie_id}/roles')
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 200)
+        self.assertTrue(data['success'])
+        self.assertEqual(data['id'], movie_id)
+
+    def test_error_get_roles_of_movie_by_invalid_id(self):
+        movie_id = 987654321
+
+        res = self.client().get(f'/movies/{movie_id}/roles')
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 422)
+        self.assertFalse(data['success'])
+        self.assertEqual(data['message'], 'Invalid movie id')
+
     def test_create_movie(self):
         res = self.client().post(
             '/movies', 
             json=AppTestCase.test_movie, 
-            headers=PRODUCER_HEADER)
+            headers=HEADER)
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 200)

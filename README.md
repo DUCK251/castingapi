@@ -2,7 +2,7 @@
 
 ## Introduction
 
-The casting api backend project
+The casting API backend project is Udacity Capstone Project. The data model contains 3 tables movies, roles, and actors. Each movie has roles for searching for talents. The API provides methods of creating, modifying, and searching movies, actors, and roles. The API also implements RBAC(role-based access control) by using [Auth 0](https://auth0.com/). Therefore, you need Access Tokens to fully use the API.
 
 ## Getting Started
 
@@ -10,7 +10,7 @@ The casting api backend project
 
 #### Virtual Enviornment
 
-We recommend working within a virtual environment. Instructions for setting up a virual enviornment for your platform can be found in the [python docs](https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/)
+We recommend working within a virtual environment. Instructions for setting up a virtual enviornment for your platform can be found in the [python docs](https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/)
 
 #### PIP Dependencies
 
@@ -63,6 +63,23 @@ Setting the `APP_SETTINGS` variable will detect file changes and restart the ser
 
 Setting the `DATABASE_URL` variable will set `SQLALCHEMY_DATABASE_URI` in config.py
 
+## RBAC Description
+
+- There are 3 roles and 12 permissions. They are described below. Test Tokens are in tokens.txt.
+
+### Assistant
+
+- The assistant role is granted to casting assistants. It contains `get:actors`, `get:movies`, `get:roles` permissions.
+
+### Director
+
+- The director role is granted to casting directors. It contains all permissions assistants have and `patch:actors`, `patch:movies`, `patch:roles`, `post:actors`, `post:roles`, `delete:actors`, `delete:roles`.
+- In short, Director has all permissions without `post:movies` and `delete:movies`.
+
+### Producer
+
+- The producer role is granted to executive producers. It contains all permissions directors have and `post:movies`, `delete:movies`.
+
 ## Endpoints
 
 ### Movie DataBase Description
@@ -79,10 +96,10 @@ Setting the `DATABASE_URL` variable will set `SQLALCHEMY_DATABASE_URI` in config
 
 - General:
     - Fetches a dictionary of movies
-    - Query parameters are `title`, `min_release_date`, `max_release_date`, `comapny`, `description`, `search_term`, `page`, `page_size`
+    - Query parameters are `title`, `min_release_date`, `max_release_date`, `release_date`, `comapny`, `description`, `search_term`, `page`, `page_size`
     - `search_term` is for title search and it is case insensitive.
     - Returns : movies, total_movies, success
-    - The return `movies` is paginated with pagesize = 10 and `total_movies` is the number of movies without pagination.
+    - The return `movies` is paginated with pagesize and `total_movies` is the number of movies without pagination. (default page is 1 and default page_size is 10)
 - Request
 ```
 curl http://127.0.0.1:5000/movies?min_release_date=2022-01-01
@@ -164,6 +181,45 @@ curl http://127.0.0.1:5000/movies?min_release_date=2022-01-01
   ], 
   "success": true, 
   "total_movies": 11
+}
+```
+
+### GET /movies/{movie_id}/roles
+
+- General:
+    - Fetches a dictionary of roles of a movie
+    - Returns : roles, id, success
+- Request
+```
+curl http://127.0.0.1:5000/movies/1/roles
+```
+- Response
+```
+{
+  "id": 1,
+  "roles": [
+    {
+      "actor_id": null,
+      "description": null,
+      "gender": "male",
+      "id": 1,
+      "max_age": 30,
+      "min_age": 25,
+      "movie_id": 1,
+      "name": "kimmich"
+    },
+    {
+      "actor_id": null,
+      "description": null,
+      "gender": "male",
+      "id": 2,
+      "max_age": 35,
+      "min_age": 30,
+      "movie_id": 1,
+      "name": "revan"
+    }
+  ],
+  "success": true
 }
 ```
 
@@ -253,6 +309,7 @@ curl \
     - Fetches a dictionary of roles
     - Query parameters are `movie_id`, `actor_id`, `name`, `gender`, `min_age`, `max_age`, `description`, `page`, `page_size`
     - Returns : roles, total_roles, success
+    - The return `roles` is paginated with pagesize and `total_roles` is the number of roles without pagination. (default page is 1 and default page_size is 10)
 - Request
 ```
 curl http://127.0.0.1:5000/roles?gender=male
@@ -268,6 +325,7 @@ curl http://127.0.0.1:5000/roles?gender=male
       "max_age": 30, 
       "min_age": 25, 
       "movie_id": 1, 
+      "actor_id": null, 
       "name": "kimmich"
     }, 
     {
@@ -277,6 +335,7 @@ curl http://127.0.0.1:5000/roles?gender=male
       "max_age": 35, 
       "min_age": 30, 
       "movie_id": 1, 
+      "actor_id": null, 
       "name": "revan"
     }, 
     {
@@ -286,6 +345,7 @@ curl http://127.0.0.1:5000/roles?gender=male
       "max_age": 25, 
       "min_age": 15, 
       "movie_id": 2, 
+      "actor_id": null, 
       "name": "jack"
     }, 
     {
@@ -295,6 +355,7 @@ curl http://127.0.0.1:5000/roles?gender=male
       "max_age": 60, 
       "min_age": 50, 
       "movie_id": 4, 
+      "actor_id": null, 
       "name": "park"
     }, 
     {
@@ -304,6 +365,7 @@ curl http://127.0.0.1:5000/roles?gender=male
       "max_age": 80, 
       "min_age": 70, 
       "movie_id": 4, 
+      "actor_id": null, 
       "name": "park"
     }
   ], 
@@ -455,6 +517,7 @@ BODY_TYPE = [
     - Query parameters are `name`, `age`, `min_age`, `max_age`, `gender`, `location`, `passport`, `driver_license`, `ethnicity`, `hair_color`, `eye_color`, `body_type`, `height`, `min_height`, `max_height`, `description`, `image_link`, `phone`, `email`, `search_term`, `page`, `page_size`.
     - By `search_term` query parameter, we are able to search name.
     - Returns : actors, success
+    - The return `actors` is paginated with pagesize and `total_actors` is the number of actors without pagination. (default page is 1 and default page_size is 10)
 - Request
 ```
 curl http://127.0.0.1:5000/actors?ethnicity=asian&gender=female
@@ -484,6 +547,45 @@ curl http://127.0.0.1:5000/actors?ethnicity=asian&gender=female
   ], 
   "success": true, 
   "total_actors": 1
+}
+```
+
+### GET /actors/{actor_id}/roles
+
+- General:
+    - Fetches a dictionary of roles of an actor
+    - Returns : roles, id, success
+- Request
+```
+curl http://127.0.0.1:5000/actors/1/roles
+```
+- Response
+```
+{
+  "id": 1,
+  "roles": [
+    {
+      "actor_id": 1,
+      "description": null,
+      "gender": "male",
+      "id": 1,
+      "max_age": 30,
+      "min_age": 25,
+      "movie_id": 1,
+      "name": "kimmich"
+    },
+    {
+      "actor_id": 1,
+      "description": null,
+      "gender": "male",
+      "id": 2,
+      "max_age": 35,
+      "min_age": 30,
+      "movie_id": 2,
+      "name": "revan"
+    }
+  ],
+  "success": true
 }
 ```
 
@@ -570,9 +672,15 @@ To run the tests, run
 export DATABASE_URL=postgresql:///castingapi_test
 dropdb castingapi_test
 createdb castingapi_test
+python manage.py db upgrade
 python3 test_case.py
 python3 test_app_by_assistant_token.py
 python3 test_app_by_director_token.py
 python3 test_app_by_producer_token.py
 ```
 Before testing, check tokens in test files.
+
+## Heroku URL
+
+- http://duckcastingapi.herokuapp.com/
+- Test Tokens are in `tokens.txt`

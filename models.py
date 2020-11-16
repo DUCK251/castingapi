@@ -133,7 +133,8 @@ class Movie(db.Model):
         '''
         Args:
             key:
-            release_date: datetime.date string format "%Y-%m-%d" ex) "2020-03-03"
+            release_date: datetime.date
+                          string format "%Y-%m-%d" ex) "2020-03-03"
         '''
         date_format = '%Y-%m-%d'
         if release_date is None:
@@ -141,8 +142,10 @@ class Movie(db.Model):
         try:
             tranformed_date = datetime.strptime(release_date, date_format)
             return tranformed_date
-        except:
-            raise AssertionError(f'Provided release_date does not match format {date_format}')
+        except ValueError:
+            err_message = (f'Provided release_date does not match'
+                           f' format {date_format}')
+            raise AssertionError(err_message)
 
     @validates('company')
     def validate_company(self, key, company):
@@ -225,7 +228,7 @@ class Actor(db.Model):
             raise AssertionError('No age provided')
         try:
             age = int(age)
-        except:
+        except ValueError:
             raise AssertionError('age is not integer')
         return age
 
@@ -282,7 +285,7 @@ class Actor(db.Model):
 
         try:
             height = int(height)
-        except:
+        except ValueError:
             raise AssertionError('height is not integer')
         if height < 0:
             raise AssertionError('height can not be negative')

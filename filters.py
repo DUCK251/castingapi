@@ -4,13 +4,15 @@ PAGE_SIZE = 10
 
 
 class Basefilter:
-    '''The class implements filter methods to update query and get results by query.
-    Subclass overrides get_results method to get filtered results.
+    '''The class implements filter methods to update query and
+    get results by query. Subclass overrides get_results method
+    to get filtered results.
 
     Attribute:
         model: sqlalchemy model
         columns: colums of self.model
-        data: dictionary({key(string): value(list)}). Using the data, update query.
+        data: dictionary({key(string): value(list)}).
+              Using the data, update query.
         query: sqlalchemy query initialized by self.model.query
 
     Method:
@@ -18,8 +20,10 @@ class Basefilter:
         filter_by_min: update query greater than or equal to min_value
         filter_by_max: update query less than or equal to max_value
         get_page_info: returns page and page_size by self.data
-        paginate: returns total number of query results and paginated results by query 
-        get_results: update query and returns total number of results and paginated results.
+        paginate: returns total number of query results and
+                  paginated results by query
+        get_results: update query and returns total number of results and
+                     paginated results.
     '''
     def __init__(self, model, data):
         self.model = model
@@ -47,7 +51,8 @@ class Basefilter:
         key = key or 'min_' + column
         if key in self.data:
             min_value = self.data[key][0]
-            self.query = self.query.filter(getattr(self.model, column) >= min_value)
+            model_column = getattr(self.model, column)
+            self.query = self.query.filter(model_column >= min_value)
 
     def filter_by_max(self, column, key=None):
         '''
@@ -63,7 +68,8 @@ class Basefilter:
         key = key or 'max_' + column
         if key in self.data:
             max_value = self.data[key][0]
-            self.query = self.query.filter(getattr(self.model, column) <= max_value)
+            model_column = getattr(self.model, column)
+            self.query = self.query.filter(model_column <= max_value)
 
     def get_page_info(self):
         if 'page' in self.data:
@@ -96,7 +102,8 @@ class Actorfilter(Basefilter):
     def filter_name_by_search_term(self):
         if 'search_term' in self.data:
             search_term = self.data['search_term'][0]
-            self.query = self.query.filter(self.model.name.ilike(f'%{search_term}%'))
+            criterion = self.model.name.ilike(f'%{search_term}%')
+            self.query = self.query.filter(criterion)
 
     def get_results(self):
         self.filter()
@@ -116,7 +123,8 @@ class Moviefilter(Basefilter):
     def filter_title_by_search_term(self):
         if 'search_term' in self.data:
             search_term = self.data['search_term'][0]
-            self.query = self.query.filter(self.model.title.ilike(f'%{search_term}%'))
+            criterion = self.model.name.ilike(f'%{search_term}%')
+            self.query = self.query.filter(criterion)
 
     def get_results(self):
         self.filter()

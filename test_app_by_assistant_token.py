@@ -1,4 +1,5 @@
-import os, sys
+import os
+import sys
 import unittest
 import json
 
@@ -8,7 +9,7 @@ from models import db, Actor, Movie, Role
 '''
 ASSISTANT_TOKEN can be expired
 '''
-ASSISTANT_TOKEN = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IktpQ3ZwMmZaZXdfMlJwemxaSUR2QiJ9.eyJpc3MiOiJodHRwczovL2Rldi1ocm12dmE5Yi51cy5hdXRoMC5jb20vIiwic3ViIjoiYXV0aDB8NWY4YTVjZjA0ZmZhYzMwMDZmMmNiNTA3IiwiYXVkIjoiY2FzdGluZyIsImlhdCI6MTYwNTQ0NzQyMSwiZXhwIjoxNjA1NTMzODIxLCJhenAiOiIybE9EeWI0THBmTlFqV1F1UDd6ZTJMWlRJd3I3VVNQOSIsInNjb3BlIjoiIiwicGVybWlzc2lvbnMiOlsiZ2V0OmFjdG9ycyIsImdldDptb3ZpZXMiLCJnZXQ6cm9sZXMiXX0.AuGmOBdG1l5_JbZOgMAE5zVSL3pdzotQyja-bC3hUnHR3slZSvNr9kkETqZ8TI8vOihnFufvLipVlVTwZuVdhiQ-ZeHDI8jVvSHt4gE-L7L93xF7VtuyN853vqvqZXSBmJAuaN859FXYRAxWV_ntIr96V9Mn-xwgVnNqjdYlcb7bzht8-Z7qdpV6Vaa8TqkJa7W6bfwX3NjWfHb0ydjO9hBcuazo14MgcWAuMelbNBshGma16aHvJ2pD3yyfdtc65C2qtkH3aYEX2eAoqpOiAIVtstxEbpUlmhDHxvtgAb7VBYIGYNp7OTI8Z_wL_fkzAb-I8tJySDmQXEtCfp7b5Q'
+ASSISTANT_TOKEN = os.environ['ASSISTANT']
 HEADER = {'Authorization': f'Bearer {ASSISTANT_TOKEN}'}
 
 
@@ -61,6 +62,7 @@ class AppTestCase(unittest.TestCase):
         actor_two = Actor(**AppTestCase.test_actor)
         actor_two.insert()
         actor_two_id = actor_two.id
+        actor_id_list = [actor_one_id, actor_two_id]
 
         res = self.client().get(f'/actors?id={actor_one_id}&id={actor_two_id}')
         data = json.loads(res.data)
@@ -68,12 +70,12 @@ class AppTestCase(unittest.TestCase):
         self.assertEqual(res.status_code, 200)
         self.assertTrue(data['success'])
         self.assertTrue(data['total_actors'] == 2)
-        self.assertTrue(data['actors'][0]['id'] in [actor_one_id, actor_two_id])
-        self.assertTrue(data['actors'][1]['id'] in [actor_one_id, actor_two_id])
+        self.assertTrue(data['actors'][0]['id'] in actor_id_list)
+        self.assertTrue(data['actors'][1]['id'] in actor_id_list)
 
         actor_one.delete()
         actor_two.delete()
-    
+
     def test_get_actors_by_name_search_term(self):
         actor = Actor(**AppTestCase.test_actor)
         actor.insert()
@@ -130,7 +132,9 @@ class AppTestCase(unittest.TestCase):
         self.assertEqual(data['message'], 'Invalid actor id')
 
     def test_create_actor(self):
-        res = self.client().post('/actors', json=AppTestCase.test_actor, headers=HEADER)
+        res = self.client().post('/actors',
+                                 json=AppTestCase.test_actor,
+                                 headers=HEADER)
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 401)
@@ -145,7 +149,9 @@ class AppTestCase(unittest.TestCase):
             'age': 23
         }
 
-        res = self.client().patch(f'/actors/{actor_id}', json=change_data, headers=HEADER)
+        res = self.client().patch(f'/actors/{actor_id}',
+                                  json=change_data,
+                                  headers=HEADER)
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 401)
@@ -173,7 +179,7 @@ class AppTestCase(unittest.TestCase):
 
         res = self.client().get(f'/movies?id={movie_id}')
         data = json.loads(res.data)
-        
+
         self.assertEqual(res.status_code, 200)
         self.assertTrue(data['success'])
         self.assertEqual(data['movies'][0]['id'], movie_id)
@@ -241,8 +247,8 @@ class AppTestCase(unittest.TestCase):
 
     def test_create_movie(self):
         res = self.client().post(
-            '/movies', 
-            json=AppTestCase.test_movie, 
+            '/movies',
+            json=AppTestCase.test_movie,
             headers=HEADER)
         data = json.loads(res.data)
 
@@ -257,13 +263,15 @@ class AppTestCase(unittest.TestCase):
         change_data = {
             'title': 'changed_test_movie'
         }
-        
-        res = self.client().patch(f'/movies/{movie_id}', json=change_data, headers=HEADER)
+
+        res = self.client().patch(f'/movies/{movie_id}',
+                                  json=change_data,
+                                  headers=HEADER)
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 401)
         self.assertEqual(data['description'], 'Permission not found.')
-        
+
         new_movie.delete()
 
     def test_delete_movie(self):
@@ -276,7 +284,7 @@ class AppTestCase(unittest.TestCase):
 
         self.assertEqual(res.status_code, 401)
         self.assertEqual(data['description'], 'Permission not found.')
-        
+
         new_movie.delete()
 
     def test_get_roles_by_min_age(self):
@@ -287,7 +295,7 @@ class AppTestCase(unittest.TestCase):
         new_actor = Actor(**AppTestCase.test_actor)
         new_actor.insert()
 
-        new_role = Role(movie_id = movie_id, **AppTestCase.test_role)
+        new_role = Role(movie_id=movie_id, **AppTestCase.test_role)
         new_role.actor = new_actor
         new_role.insert()
 
@@ -302,7 +310,7 @@ class AppTestCase(unittest.TestCase):
 
         new_movie.delete()
         new_actor.delete()
-    
+
     def test_create_role(self):
         new_movie = Movie(**AppTestCase.test_movie)
         new_movie.insert()
@@ -311,12 +319,14 @@ class AppTestCase(unittest.TestCase):
         valid_test_role = AppTestCase.test_role.copy()
         valid_test_role['movie_id'] = movie_id
 
-        res = self.client().post('/roles', json = valid_test_role, headers=HEADER)
+        res = self.client().post('/roles',
+                                 json=valid_test_role,
+                                 headers=HEADER)
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 401)
         self.assertEqual(data['description'], 'Permission not found.')
- 
+
         new_movie.delete()
 
     def test_patch_role_to_provide_actor_id(self):
@@ -324,7 +334,7 @@ class AppTestCase(unittest.TestCase):
         new_movie.insert()
         movie_id = new_movie.id
 
-        new_role = Role(movie_id = movie_id, **AppTestCase.test_role)
+        new_role = Role(movie_id=movie_id, **AppTestCase.test_role)
         new_role.insert()
         role_id = new_role.id
 
@@ -332,7 +342,9 @@ class AppTestCase(unittest.TestCase):
         new_actor.insert()
         actor_id = new_actor.id
 
-        res = self.client().patch(f'/roles/{role_id}', json = {'actor_id': actor_id}, headers=HEADER)
+        res = self.client().patch(f'/roles/{role_id}',
+                                  json={'actor_id': actor_id},
+                                  headers=HEADER)
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 401)
@@ -346,7 +358,7 @@ class AppTestCase(unittest.TestCase):
         new_movie.insert()
         movie_id = new_movie.id
 
-        new_role = Role(movie_id = movie_id, **AppTestCase.test_role)
+        new_role = Role(movie_id=movie_id, **AppTestCase.test_role)
         new_role.insert()
         role_id = new_role.id
 

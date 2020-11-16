@@ -38,8 +38,10 @@ cors = CORS(app, origins=['*'])
 
 @app.after_request
 def after_request(response):
-    response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
-    response.headers.add('Access-Control-Allow-Methods', 'GET,POST,PATCH,DELETE,OPTIONS')
+    allow_headers = 'Content-Type,Authorization'
+    allow_methods = 'GET,POST,PATCH,DELETE,OPTIONS'
+    response.headers.add('Access-Control-Allow-Headers', allow_headers)
+    response.headers.add('Access-Control-Allow-Methods', allow_methods)
     return response
 
 
@@ -59,7 +61,7 @@ def get_actors():
             'actors': actors,
             'total_actors': total_actors_count,
         })
-    except:
+    except Exception:
         abort(422)
 
 
@@ -82,7 +84,7 @@ def get_roles_of_actor(actor_id):
             'id': actor_id,
             'roles': roles
         })
-    except:
+    except Exception:
         abort(422)
 
 
@@ -105,7 +107,7 @@ def post_actor(payload):
             'success': True,
             'id': new_actor.id,
         })
-    except:
+    except Exception:
         abort(422)
 
 
@@ -131,7 +133,7 @@ def patch_actor(payload, actor_id):
             'success': True,
             'id': actor_id,
         })
-    except:
+    except Exception:
         abort(422)
 
 
@@ -154,7 +156,7 @@ def delete_actor(payload, actor_id):
             'success': True,
             'id': actor_id,
         })
-    except:
+    except Exception:
         abort(422)
 
 
@@ -169,7 +171,7 @@ def get_movies():
             'movies': movies,
             'total_movies': total_movies_count,
         })
-    except:
+    except Exception:
         abort(422)
 
 
@@ -192,7 +194,7 @@ def get_roles_of_movie(movie_id):
             'id': movie_id,
             'roles': roles
         })
-    except:
+    except Exception:
         abort(422)
 
 
@@ -215,7 +217,7 @@ def post_movie(payload):
             'success': True,
             'id': new_movie.id,
         })
-    except:
+    except Exception:
         abort(422)
 
 
@@ -241,7 +243,7 @@ def patch_movie(payload, movie_id):
             'success': True,
             'id': movie_id,
         })
-    except:
+    except Exception:
         abort(422)
 
 
@@ -265,7 +267,7 @@ def delete_movie(payload, movie_id):
             'success': True,
             'id': movie_id,
         })
-    except:
+    except Exception:
         abort(422)
 
 
@@ -280,7 +282,7 @@ def get_roles():
             'roles': roles,
             'total_roles': total_roles_count,
         })
-    except:
+    except Exception:
         abort(422)
 
 
@@ -304,7 +306,7 @@ def post_role(payload):
             'success': True,
             'id': new_role.id,
         })
-    except:
+    except Exception:
         abort(422)
 
 
@@ -331,7 +333,7 @@ def patch_role(payload, role_id):
             'success': True,
             'id': role_id,
         })
-    except:
+    except Exception:
         abort(422)
 
 
@@ -355,7 +357,7 @@ def delete_role(payload, role_id):
             'success': True,
             'id': role_id,
         })
-    except:
+    except Exception:
         abort(422)
 
 

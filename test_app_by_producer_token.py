@@ -9,7 +9,7 @@ from models import db, Actor, Movie, Role
 '''
 PRODUCER_TOKEN can be expired
 '''
-PRODUCER_TOKEN = os.environ['PRODUCER']
+PRODUCER_TOKEN = str(os.environ['PRODUCER'])
 HEADER = {'Authorization': f'Bearer {PRODUCER_TOKEN}'}
 
 

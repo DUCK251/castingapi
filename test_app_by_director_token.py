@@ -9,7 +9,7 @@ from models import db, Actor, Movie, Role
 '''
 DIRECTOR_TOKEN can be expired
 '''
-DIRECTOR_TOKEN = os.environ['DIRECTOR']
+DIRECTOR_TOKEN = str(os.environ['DIRECTOR'])
 HEADER = {'Authorization': f'Bearer {DIRECTOR_TOKEN}'}
 
 

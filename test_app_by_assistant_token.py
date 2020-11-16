@@ -9,7 +9,7 @@ from models import db, Actor, Movie, Role
 '''
 ASSISTANT_TOKEN can be expired
 '''
-ASSISTANT_TOKEN = os.environ['ASSISTANT']
+ASSISTANT_TOKEN = str(os.environ['ASSISTANT'])
 HEADER = {'Authorization': f'Bearer {ASSISTANT_TOKEN}'}
 
 

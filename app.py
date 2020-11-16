@@ -1,10 +1,12 @@
 import os
 import sys
 
-from flask import Flask
-from flask import jsonify
-from flask import abort
-from flask import request
+from flask import (
+    Flask,
+    jsonify,
+    abort,
+    request
+)
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 

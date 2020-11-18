@@ -81,15 +81,8 @@ def setup_db(app):
     db.init_app(app)
 
 
-class Movie(db.Model):
-    __tablename__ = 'movies'
-
-    id = Column(Integer, primary_key=True)
-    title = Column(String, nullable=False)
-    release_date = Column(Date, nullable=False)
-    company = Column(String, nullable=False)
-    description = Column(String)
-    roles = relationship("Role", back_populates="movie", cascade="all, delete")
+class BaseModel(db.Model):
+    __abstract__ = True
 
     def insert(self):
         db.session.add(self)
@@ -107,10 +100,22 @@ class Movie(db.Model):
         The function does not commit.
         Use update() method to comiit
         '''
-        columns = [c.key for c in Movie.__table__.columns]
+        table = getattr(self.__class__, '__table__')
+        columns = [c.key for c in table.columns]
         for key, value in kwags.items():
             if key in columns and value is not None:
                 setattr(self, key, value)
+
+
+class Movie(BaseModel):
+    __tablename__ = 'movies'
+
+    id = Column(Integer, primary_key=True)
+    title = Column(String, nullable=False)
+    release_date = Column(Date, nullable=False)
+    company = Column(String, nullable=False)
+    description = Column(String)
+    roles = relationship("Role", back_populates="movie", cascade="all, delete")
 
     def format(self):
         release_date_format = '%Y-%m-%d'
@@ -154,7 +159,7 @@ class Movie(db.Model):
         return company
 
 
-class Actor(db.Model):
+class Actor(BaseModel):
     __tablename__ = 'actors'
 
     id = Column(Integer, primary_key=True)
@@ -174,27 +179,6 @@ class Actor(db.Model):
     phone = Column(String)
     email = Column(String)
     roles = relationship("Role", back_populates="actor")
-
-    def insert(self):
-        db.session.add(self)
-        db.session.commit()
-
-    def delete(self):
-        db.session.delete(self)
-        db.session.commit()
-
-    def update(self):
-        db.session.commit()
-
-    def update_by_dict(self, **kwags):
-        '''
-        The function does not commit.
-        Use update() method to comiit
-        '''
-        columns = [c.key for c in Actor.__table__.columns]
-        for key, value in kwags.items():
-            if key in columns and value is not None:
-                setattr(self, key, value)
 
     def format(self):
         return {
@@ -313,7 +297,7 @@ class Actor(db.Model):
         return email
 
 
-class Role(db.Model):
+class Role(BaseModel):
     __tablename__ = 'roles'
 
     id = Column(Integer, primary_key=True)
@@ -329,27 +313,6 @@ class Role(db.Model):
     description = Column(String)
     movie = relationship("Movie", back_populates="roles")
     actor = relationship("Actor", back_populates="roles")
-
-    def insert(self):
-        db.session.add(self)
-        db.session.commit()
-
-    def delete(self):
-        db.session.delete(self)
-        db.session.commit()
-
-    def update(self):
-        db.session.commit()
-
-    def update_by_dict(self, **kwags):
-        '''
-        The function does not commit.
-        Use update() method to comiit
-        '''
-        columns = [c.key for c in Role.__table__.columns]
-        for key, value in kwags.items():
-            if key in columns and value is not None:
-                setattr(self, key, value)
 
     def format(self):
         return {

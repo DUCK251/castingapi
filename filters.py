@@ -123,7 +123,7 @@ class Moviefilter(Basefilter):
     def filter_title_by_search_term(self):
         if 'search_term' in self.data:
             search_term = self.data['search_term'][0]
-            criterion = self.model.name.ilike(f'%{search_term}%')
+            criterion = self.model.title.ilike(f'%{search_term}%')
             self.query = self.query.filter(criterion)
 
     def get_results(self):

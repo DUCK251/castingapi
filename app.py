@@ -10,11 +10,22 @@ from flask import (
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 
-from models import setup_db
-from models import db
-from models import Actor, Movie, Role
-from filters import Actorfilter, Moviefilter, Rolefilter
-from auth import requires_auth, AuthError
+from models import (
+    setup_db,
+    db,
+    Actor,
+    Movie,
+    Role
+)
+from filters import (
+    Actorfilter,
+    Moviefilter,
+    Rolefilter
+)
+from auth import (
+    requires_auth,
+    AuthError
+)
 
 
 ACTOR_COLUMNS = [
@@ -35,7 +46,8 @@ app = Flask(__name__)
 app.config.from_object(os.environ['APP_SETTINGS'])
 setup_db(app)
 
-cors = CORS(app, origins=['*'])
+
+cors = CORS(app, origins=['http://localhost:5000', 'https://duckcastingapi.herokuapp.com'])
 
 
 @app.after_request

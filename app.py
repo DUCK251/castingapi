@@ -47,7 +47,8 @@ app.config.from_object(os.environ['APP_SETTINGS'])
 setup_db(app)
 
 
-cors = CORS(app, origins=['http://localhost:5000', 'https://duckcastingapi.herokuapp.com'])
+cors = CORS(app, origins=['http://localhost:5000',
+                          'https://duckcastingapi.herokuapp.com'])
 
 
 @app.after_request

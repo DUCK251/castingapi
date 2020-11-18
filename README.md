@@ -2,7 +2,20 @@
 
 ## Introduction
 
-The casting API backend project is Udacity Capstone Project. The data model contains 3 tables movies, roles, and actors. Each movie has roles for searching for talents. The API provides methods of creating, modifying, and searching movies, actors, and roles. The API also implements RBAC(role-based access control) by using [Auth 0](https://auth0.com/). Therefore, you need Access Tokens to fully use the API.
+The casting agency app helps users find the actor for roles in the movie.
+The casting agency app is used to store movies, actors, and roles associated with the movies. 
+The details of database models and endpoints are described below.
+Users can send a post request with the movie data including title, company, release date, and description in order to store movie data.
+Users can send a post request with the actor data including name, age, gender, and location in order to store actor data.
+Users can send a post request with the role data in order to store role data.
+Users can also retrieve filtered actors by query string to find talents for hire.
+Users can also retrieve filtered roles by query string to find proper roles for an actor.
+Users can update movies and actor's details and also delete a movie and an actor by sending requests to the appropriate endpoints.
+If an actor is determined for a role, the user can update role data associated with the actor.
+The API also implements RBAC(role-based access control) by using [Auth 0](https://auth0.com/). 
+Only produce executives can access all methods. 
+Casting assistants and Casting directors are given limited access permissions. 
+The details of permissions are described below.
 
 ## Getting Started
 
@@ -12,12 +25,28 @@ The casting API backend project is Udacity Capstone Project. The data model cont
 
 We recommend working within a virtual environment. Instructions for setting up a virtual enviornment for your platform can be found in the [python docs](https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/)
 
+On macOS and Linux:
+
+```bash
+python3 -m pip install --user virtualenv
+python3 -m venv env
+source env/bin/activate
+```
+
+On Windows:
+
+```
+py -m pip install --user virtualenv
+py -m venv env
+.\env\Scripts\activate
+```
+
+
 #### PIP Dependencies
 
 Once you have your virtual environment setup and running, install dependencies by running:
 
 ```bash
-source env/bin/activate
 pip install -r requirements.txt
 ```
 
@@ -31,11 +60,23 @@ This will install all of the required packages we selected within the `requireme
 
 ## Database Setup
 
-From the folder in terminal run:
+From the folder in terminal run
+
+On macOS and Linux:
 
 ```bash
 export APP_SETTINGS="config.DevelopmentConfig"
 export DATABASE_URL="postgresql:///castingapi"
+python manage.py db init
+python manage.py db migrate
+python manage.py db upgrade
+```
+
+On Windows:
+
+```bash
+set APP_SETTINGS=config.DevelopmentConfig;
+set DATABASE_URL=postgresql:///castingapi;
 python manage.py db init
 python manage.py db migrate
 python manage.py db upgrade
@@ -65,7 +106,7 @@ Setting the `DATABASE_URL` variable will set `SQLALCHEMY_DATABASE_URI` in config
 
 ## RBAC Description
 
-- There are 3 roles and 12 permissions. They are described below. Test Tokens are in tokens.txt.
+- There are 3 roles and 12 permissions. They are described below. Test Tokens are in setup.sh.
 
 ### Assistant
 
@@ -669,6 +710,7 @@ curl \
 ## Testing
 To run the tests, run
 ```
+source setup.sh
 export DATABASE_URL=postgresql:///castingapi_test
 dropdb castingapi_test
 createdb castingapi_test
@@ -678,9 +720,8 @@ python3 test_app_by_assistant_token.py
 python3 test_app_by_director_token.py
 python3 test_app_by_producer_token.py
 ```
-Before testing, check tokens in test files.
 
 ## Heroku URL
 
 - http://duckcastingapi.herokuapp.com/
-- Test Tokens are in `tokens.txt`
+- Test Tokens are in `setup.sh`

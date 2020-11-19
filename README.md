@@ -19,6 +19,30 @@ The details of permissions are described below.
 
 ## Getting Started
 
+### Using Docker Compose
+
+You are able to use [Docker Compose](https://docs.docker.com/compose/).
+First you should install docker and docker compose. Instructions for installing docker for your platform can be found in the [docker docs](https://docs.docker.com/engine/install/) and the [docker compose docs](https://docs.docker.com/compose/install/). Then run in the project directory :
+
+
+```
+docker-compose build
+docker-compose up -d
+```
+
+Check http://localhost:5000/ and then you will see 'hello world!'.
+You can check the logs via `docker-compose logs -f`.
+
+If you want to delete docker images and volumes after using, run
+
+```
+docker stop castingapi_web_1
+docker stop castingapi_db_1
+docker rm castingapi_web_1
+docker rm castingapi_db_1
+docker volume rm castingapi_postgres_data
+```
+
 ### Installing Dependencies
 
 #### Virtual Enviornment

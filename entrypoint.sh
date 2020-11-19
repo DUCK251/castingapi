@@ -1,0 +1,22 @@
+#!/bin/sh
+
+if [ "$DATABASE" = "postgres" ]
+then
+    echo "Waiting for postgres..."
+
+    while ! nc -z $SQL_HOST $SQL_PORT; do
+      sleep 0.1
+    done
+
+    echo "PostgreSQL started"
+fi
+
+if [ ! -d "$MIGRATION_DIRECTORY" ] 
+then
+  python manage.py db init
+  python manage.py db migrate
+fi
+
+python manage.py db upgrade
+
+exec "$@"

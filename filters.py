@@ -1,4 +1,8 @@
-from models import Actor, Movie, Role
+from models import (
+    Actor,
+    Movie,
+    Role
+)
 
 PAGE_SIZE = 10
 

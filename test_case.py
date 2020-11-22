@@ -2,12 +2,16 @@ import random
 from random import randint
 
 from app import app
-from models import db, Actor, Movie, Role
-from models import ETHNICITY_TYPE
-from models import HAIR_COLOR_TYPE
-from models import EYE_COLOR_TYPE
-from models import BODY_TYPE
-from models import GENDER_TYPE
+from models import (
+    db, 
+    Actor, 
+    Movie, 
+    Role,
+    ETHNICITY_TYPE,
+    HAIR_COLOR_TYPE,
+    BODY_TYPE,
+    GENDER_TYPE
+)
 
 PHONES = [
     '+1-202-555-0169',

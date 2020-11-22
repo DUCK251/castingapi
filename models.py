@@ -6,12 +6,21 @@ from datetime import datetime
 import validators
 
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import (
+    Column,
+    String,
+    Integer,
+    Date,
+    Boolean,
+    ForeignKey,
+    Enum,
+    create_engine
+)
 from sqlalchemy.dialects.postgresql import JSON
-from sqlalchemy import Column
-from sqlalchemy import String, Integer, Date, Boolean
-from sqlalchemy import ForeignKey, Enum, create_engine
-from sqlalchemy.orm import relationship
-from sqlalchemy.orm import validates
+from sqlalchemy.orm import (
+    relationship,
+    validates
+)
 from sqlalchemy_utils import ChoiceType
 
 db = SQLAlchemy()

@@ -4,7 +4,12 @@ import unittest
 import json
 
 from app import app
-from models import db, Actor, Movie, Role
+from models import (
+    db,
+    Actor,
+    Movie,
+    Role
+)
 
 '''
 DIRECTOR_TOKEN can be expired

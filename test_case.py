@@ -3,9 +3,9 @@ from random import randint
 
 from app import app
 from models import (
-    db, 
-    Actor, 
-    Movie, 
+    db,
+    Actor,
+    Movie,
     Role,
     ETHNICITY_TYPE,
     HAIR_COLOR_TYPE,

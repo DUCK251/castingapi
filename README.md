@@ -33,7 +33,7 @@ docker-compose up -d
 Check http://localhost:5000/ and then you will see 'hello world!'.
 You can check the logs via `docker-compose logs -f`.
 
-If you want to delete docker images and volumes after using, run
+If you want to delete docker images and volumes, run
 
 ```
 docker stop castingapi_web_1
@@ -110,17 +110,22 @@ python manage.py db upgrade
 
 From within the app directory first ensure you are working using your created virtual environment.
 
-To activate a virtual environment:
-
-```bash
-source env/bin/activate
-```
-
 To run the server, execute:
 
 ```bash
-export APP_SETTINGS="config.DevelopmentConfig"
-export DATABASE_URL="postgresql:///castingapi"
+source env/bin/activate
+export APP_SETTINGS='config.DevelopmentConfig'
+export DATABASE_URL='postgresql:///castingapi'
+export AUTH0_DOMAIN='dev-hrmvva9b.us.auth0.com'
+export ALGORITHMS='RS256'
+export API_AUDIENCE='casting'
+python3 app.py
+```
+
+or, execute:
+
+```bash
+source setup.sh
 python3 app.py
 ```
 
@@ -744,6 +749,7 @@ python3 test_app_by_assistant_token.py
 python3 test_app_by_director_token.py
 python3 test_app_by_producer_token.py
 ```
+You can find tokens in setup.sh.
 
 ## Heroku URL
 

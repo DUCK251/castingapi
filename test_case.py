@@ -10,7 +10,8 @@ from models import (
     ETHNICITY_TYPE,
     HAIR_COLOR_TYPE,
     BODY_TYPE,
-    GENDER_TYPE
+    GENDER_TYPE,
+    EYE_COLOR_TYPE
 )
 
 PHONES = [

@@ -1,9 +1,31 @@
 # CASTING API Backend
 
+## Motivation
+
+The Casting API Backend project is the Capstone Project for the [Udacity Full Stack NanoDegree](https://www.udacity.com/course/full-stack-web-developer-nanodegree--nd0044). The project is to practice the skills learned during the Full Stack Web Developer Nanodegree Program. The syllabus of the Udacity FSND is [here](https://d20vrrgs8k4bvw.cloudfront.net/documents/en-US/Full+Stack+-+nd0044+-+syllabus.pdf). The skills used in the Casting API project are described below.
+
+### Stack
+
+- Flask
+- PostgreSQL
+- SQLAlchemy
+- Flask-CORS(Cross-Origin Resource Sharing)
+- Unittest
+- [Auth0](https://auth0.com/) and RBAC(role-based access control)
+- [Docker Compose](https://docs.docker.com/compose/)
+- Heroku Deployment
+
+The project URL is 
+```
+http://duckcastingapi.herokuapp.com/
+```
+
+The usage of the API is described in the Introduction part and the Endpoints part.
+
 ## Introduction
 
 The casting agency app helps users find the actor for roles in the movie.
-The casting agency app is used to store movies, actors, and roles associated with the movies. 
+The app is used to store movies, actors, and roles associated with the movies. 
 The details of database models and endpoints are described below.
 Users can send a post request with the movie data including title, company, release date, and description in order to store movie data.
 Users can send a post request with the actor data including name, age, gender, and location in order to store actor data.
@@ -726,8 +748,20 @@ curl \
 }
 ```
 
-### Error
+### Error Handling
+
+- List of errors 
+
+|Error Code|Message|
+|-|-|
+|400|Bad request|
+|401|Unauthorized error|
+|404|Not found|
+|422|Unprocessable|
+|500|Internal server error|
+
 - Response
+
 ```
 {
   "success": false,
@@ -735,6 +769,7 @@ curl \
   "message": "Internal server error"
 }
 ```
+
 
 ## Testing
 To run the tests, run

@@ -8,7 +8,7 @@ jobs:
     steps:
       - persist_to_workspace:
           root: /tmp/workspace
-          paths: /
+          paths: test
       - run: echo "text to output here" > /tmp/workspace/output.txt
   print_output_file:
     docker:

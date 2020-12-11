@@ -7,7 +7,10 @@ jobs:
       - image: python:3.8.1-slim-buster
     steps:
       - checkout
-      - run: echo "build"
+      - run: |
+          apt-get update && apt-get install -y netcat
+          pip install --upgrade pip
+          pip install -r requirements.txt
 workflows:
   # Name the workflow "welcome"
   simple_workflows:

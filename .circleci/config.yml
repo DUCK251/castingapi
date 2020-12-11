@@ -8,6 +8,7 @@ jobs:
     steps:
       - persist_to_workspace:
           root: /tmp/workspace
+          paths: /
       - run: echo "text to output here" > /tmp/workspace/output.txt
   print_output_file:
     docker:
@@ -20,7 +21,7 @@ workflows:
   # Name the workflow "welcome"
   print_and_save_hello_world:
     jobs:
-      -save_hello_world_output
-      -print_output_file:
-        requires:
-          -save_hello_world_output
+      - save_hello_world_output
+      - print_output_file:
+          requires:
+            - save_hello_world_output

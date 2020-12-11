@@ -5,6 +5,17 @@ jobs:
   build:
     docker:
       - image: python:3.8.1-slim-buster
+        environment:
+          APP_SETTINGS: config.DevelopmentConfig
+          DATABASE_URL: postgresql:///castingapi
+          AUTH0_DOMAIN: dev-hrmvva9b.us.auth0.com
+          ALGORITHMS: RS256
+          API_AUDIENCE: casting
+      - image: circleci/postgres:9.6.5-alpine-ram
+        environment:
+          POSTGRES_USER: casting_user
+          POSTGRES_PASSWORD: casting_user
+          POSTGRES_DB: casting_dev
     steps:
       - checkout
       - run: |

@@ -9,7 +9,7 @@ jobs:
       - persist_to_workspace:
           root: /
           paths: test
-      - run: echo "text to output here" > /tmp/workspace/output.txt
+      - run: echo "text to output here" > /test/output.txt
   print_output_file:
     docker:
       - image: circleci/node:13.8.0

@@ -10,10 +10,12 @@ jobs:
     docker:
       - image: circleci/node:13.8.0
     steps:
-      - return 1
-      - run: echo "Failed Job!"
-        when: on_fail
+      - run: return 1
+      - run: 
+          command: echo "Failed Job!"
+          when: on_fail
 workflows:
   # Name the workflow "welcome"
-  jobs:
-    - return_one_job
+  simple_workflows:
+    jobs:
+      - return_one_job

@@ -21,9 +21,9 @@ jobs:
       - run: 
           name: Install Dependencies
           command: |
-          apt-get update && apt-get install -y netcat
-          pip install --upgrade pip
-          pip install -r requirements.txt
+            apt-get update && apt-get install -y netcat
+            pip install --upgrade pip
+            pip install -r requirements.txt
       - run:
           name: Install Python deps in a venv
           command: |
@@ -31,7 +31,12 @@ jobs:
             . venv/bin/activate
             pip install -r requirements.txt
       - run:
-          command: python app.py
+          command: |
+            createdb castingapi
+            python manage.py db init
+            python manage.py db migragte
+            python manage.py db upgrade
+            python3 test_case.py
 workflows:
   # Name the workflow "welcome"
   simple_workflows:

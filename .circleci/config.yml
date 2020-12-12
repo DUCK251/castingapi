@@ -23,15 +23,16 @@ jobs:
           command: |
             apt-get update && apt-get install -y netcat
             pip install --upgrade pip
-            pip install -r requirements.txt
       - run:
-          name: Install Python deps in a venv
+          name: Install Python dependencies
           command: |
             pip install -r requirements.txt
       - run:
+          name: database setup
           command: |
             python manage.py db upgrade
       - run:
+          name: make test cases
           command: |
             python3 test_case.py
       - run:

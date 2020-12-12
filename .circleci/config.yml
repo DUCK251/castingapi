@@ -7,15 +7,15 @@ jobs:
       - image: python:3.8.1-slim-buster
         environment:
           APP_SETTINGS: config.DevelopmentConfig
-          DATABASE_URL: postgresql:///castingapi
+          DATABASE_URL: postgresql://root@localhost/castingapi
           AUTH0_DOMAIN: dev-hrmvva9b.us.auth0.com
           ALGORITHMS: RS256
           API_AUDIENCE: casting
       - image: postgres:12-alpine
         environment:
-          POSTGRES_USER: casting_user
-          POSTGRES_PASSWORD: casting_user
-          POSTGRES_DB: casting_dev
+          POSTGRES_USER: root
+          POSTGRES_PASSWORD: ""
+          POSTGRES_DB: castingapi
     steps:
       - checkout
       - run: 

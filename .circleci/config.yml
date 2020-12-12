@@ -30,9 +30,6 @@ jobs:
             pip install -r requirements.txt
       - run:
           command: |
-            python manage.py db migrate
-      - run:
-          command: |
             python manage.py db upgrade
       - run:
           command: |

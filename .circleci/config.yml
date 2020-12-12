@@ -27,13 +27,15 @@ jobs:
       - run:
           name: Install Python deps in a venv
           command: |
-            python3 -m venv venv
-            . venv/bin/activate
             pip install -r requirements.txt
       - run:
           command: |
             python manage.py db migrate
+      - run:
+          command: |
             python manage.py db upgrade
+      - run:
+          command: |
             python3 test_case.py
 workflows:
   # Name the workflow "welcome"

@@ -32,7 +32,6 @@ jobs:
             pip install -r requirements.txt
       - run:
           command: |
-            python manage.py db init
             python manage.py db migragte
             python manage.py db upgrade
             python3 test_case.py

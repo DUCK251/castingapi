@@ -7,14 +7,14 @@ jobs:
       - image: python:3.8.1-slim-buster
         environment:
           APP_SETTINGS: config.DevelopmentConfig
-          DATABASE_URL: postgresql://root@localhost/castingapi
+          DATABASE_URL: postgresql://root:casting@localhost/castingapi
           AUTH0_DOMAIN: dev-hrmvva9b.us.auth0.com
           ALGORITHMS: RS256
           API_AUDIENCE: casting
       - image: postgres:12-alpine
         environment:
           POSTGRES_USER: root
-          POSTGRES_PASSWORD: ""
+          POSTGRES_PASSWORD: "casting"
           POSTGRES_DB: castingapi
     steps:
       - checkout
@@ -32,7 +32,7 @@ jobs:
             pip install -r requirements.txt
       - run:
           command: |
-            python manage.py db migragte
+            python manage.py db migrate
             python manage.py db upgrade
             python3 test_case.py
 workflows:

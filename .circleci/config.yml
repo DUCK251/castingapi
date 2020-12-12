@@ -18,10 +18,20 @@ jobs:
           POSTGRES_DB: casting_dev
     steps:
       - checkout
-      - run: |
+      - run: 
+          name: Install Dependencies
+          command: |
           apt-get update && apt-get install -y netcat
           pip install --upgrade pip
           pip install -r requirements.txt
+      - run:
+          name: Install Python deps in a venv
+          command: |
+            python3 -m venv venv
+            . venv/bin/activate
+            pip install -r requirements.txt
+      - run:
+          command: python app.py
 workflows:
   # Name the workflow "welcome"
   simple_workflows:

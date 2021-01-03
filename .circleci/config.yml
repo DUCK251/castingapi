@@ -43,6 +43,8 @@ jobs:
             python3 test_app_by_producer_token.py
 
   deploy:
+    docker:
+      - image: python:3.8.1-slim-buster
     steps:
       - checkout
       - run:

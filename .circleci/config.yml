@@ -1,6 +1,5 @@
 # Use the latest 2.1 version of CircleCI pipeline process engine. See: https://circleci.com/docs/2.0/configuration-reference
 version: 2.1
-# Orchestrate or schedule a set of jobs
 jobs:
   build:
     docker:
@@ -24,12 +23,10 @@ jobs:
           name: Install Dependencies
           command: |
             apt-get update
-            apt-get install -y netcat
-            pip install --upgrade pip
+            pip3 install --upgrade pip
       - run:
           name: Install Python deps in a venv
           command: |
-            python3 -m pip install --user virtualenv
             python3 -m venv venv
             . venv/bin/activate
             pip install -r requirements.txt
@@ -59,12 +56,10 @@ jobs:
           name: Install Dependencies
           command: |
             apt-get update
-            apt-get install -y netcat
-            pip install --upgrade pip
+            pip3 install --upgrade pip
       - run:
-          name: Install Python dependencies
+          name: Install Python deps in a venv
           command: |
-            python3 -m pip install --user virtualenv
             python3 -m venv venv
             . venv/bin/activate
             pip install -r requirements.txt
@@ -75,7 +70,8 @@ jobs:
       - run:
           name: populate test cases
           command: |
-            python manage.py db upgrade
+            . venv/bin/activate
+            python3 manage.py db upgrade
             python3 test_case.py
 
 workflows:

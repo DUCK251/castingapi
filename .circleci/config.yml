@@ -42,7 +42,21 @@ jobs:
             python3 test_app_by_director_token.py
             python3 test_app_by_producer_token.py
 
+  deploy:
+    steps:
+      - checkout
+      - run:
+          name: Deploy main to Heroku
+          command: |
+            git push https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_APP_NAME.git main
+
 workflows:
   castingapi_workflows:
     jobs:
       - build
+      - deploy:
+          requires:
+            - build
+          filters:
+            branches:
+              only: main

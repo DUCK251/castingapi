@@ -7,7 +7,7 @@ jobs:
       - image: python:3.8.1-slim-buster
         environment:
           APP_SETTINGS: config.DevelopmentConfig
-          DATABASE_URL: postgresql://root:casting@localhost/castingapi
+          DATABASE_URL: postgresql://root:casting@localhost/castingapi_test
           AUTH0_DOMAIN: dev-hrmvva9b.us.auth0.com
           ALGORITHMS: RS256
           API_AUDIENCE: casting
@@ -15,32 +15,80 @@ jobs:
         environment:
           POSTGRES_USER: root
           POSTGRES_PASSWORD: "casting"
-          POSTGRES_DB: castingapi
+          POSTGRES_DB: castingapi_test
     steps:
       - checkout
+      - restore_cache:
+          key: dev-{{ .Branch }}-{{ checksum "requirements.txt" }}
       - run: 
           name: Install Dependencies
           command: |
-            apt-get update && apt-get install -y netcat
+            apt-get update
+            apt-get install -y netcat
             pip install --upgrade pip
       - run:
           name: Install Python dependencies
           command: |
-            pip install -r requirements.txt
+            python3 -m pip install --user virtualenv
+            python3 -m venv env
+            source env/bin/activate
+      - save_cache:
+          key: dev-{{ .Branch }}-{{ checksum "requirements.txt" }}
+          paths:
+            - "env"
+  test:
+    docker:
+      - image: python:3.8.1-slim-buster
+        environment:
+          APP_SETTINGS: config.DevelopmentConfig
+          DATABASE_URL: postgresql://root:casting@localhost/castingapi_test
+          AUTH0_DOMAIN: dev-hrmvva9b.us.auth0.com
+          ALGORITHMS: RS256
+          API_AUDIENCE: casting
+      - image: postgres:12-alpine
+        environment:
+          POSTGRES_USER: root
+          POSTGRES_PASSWORD: "casting"
+          POSTGRES_DB: castingapi_test
+    steps:
+      - checkout
+      - restore_cache:
+          key: dev-{{ .Branch }}-{{ checksum "requirements.txt" }}
+      - run: 
+          name: Install Dependencies
+          command: |
+            apt-get update
+            apt-get install -y netcat
+            pip install --upgrade pip
       - run:
-          name: database setup
+          name: Install Python dependencies
+          command: |
+            python3 -m pip install --user virtualenv
+            python3 -m venv env
+            source env/bin/activate
+      - save_cache:
+          key: dev-{{ .Branch }}-{{ checksum "requirements.txt" }}
+          paths:
+            - "env"
+      - run:
+          name: populate test cases
           command: |
             python manage.py db upgrade
-      - run:
-          name: make test cases
-          command: |
             python3 test_case.py
-      - run:
-          name: Test Assistant case
-          command: |
-            python3 test_app_by_assistant_token.py
+  deploy:
+    docker:
+      - image: python:3.8.1-slim-buster
+
 workflows:
-  # Name the workflow "welcome"
-  simple_workflows:
+  castingapi_workflows:
     jobs:
       - build
+      - test
+          requires:
+            - build
+      - deploy
+          requires:
+            - test
+          filters:
+            branches:
+              only: master

@@ -23,7 +23,7 @@ jobs:
             apt-get update
             pip3 install --upgrade pip
       - run:
-          name: Install Python deps in a venv
+          name: Install Python deps in venv
           command: |
             python3 -m venv venv
             . venv/bin/activate
@@ -53,7 +53,7 @@ jobs:
             apt-get update
             apt-get install -y git
       - run:
-          name: Deploy main to Heroku
+          name: Deploy main branch to Heroku
           command: |
             git push https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_APP_NAME.git main
 

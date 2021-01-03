@@ -75,20 +75,11 @@ jobs:
           command: |
             python manage.py db upgrade
             python3 test_case.py
-  deploy:
-    docker:
-      - image: python:3.8.1-slim-buster
 
 workflows:
   castingapi_workflows:
     jobs:
       - build
-      - test
+      - test:
           requires:
             - build
-      - deploy
-          requires:
-            - test
-          filters:
-            branches:
-              only: master

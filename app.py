@@ -62,7 +62,7 @@ def after_request(response):
 
 @app.route('/')
 def index():
-    return "Hello World!"
+    return "Healthy"
 
 
 @app.route('/actors', methods=['GET'])

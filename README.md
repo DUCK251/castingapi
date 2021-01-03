@@ -14,6 +14,7 @@ The Casting API Backend project is the Capstone Project for the [Udacity Full St
 - [Auth0](https://auth0.com/) and RBAC(role-based access control)
 - [Docker Compose](https://docs.docker.com/compose/)
 - Heroku Deployment
+- CI/CD by [CircleCI](https://circleci.com/)
 
 The project URL is 
 ```

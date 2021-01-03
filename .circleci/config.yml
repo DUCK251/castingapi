@@ -17,8 +17,6 @@ jobs:
           POSTGRES_DB: castingapi_test
     steps:
       - checkout
-      - restore_cache:
-          key: dev-{{ .Branch }}-{{ checksum "requirements.txt" }}
       - run: 
           name: Install Dependencies
           command: |
@@ -30,54 +28,21 @@ jobs:
             python3 -m venv venv
             . venv/bin/activate
             pip install -r requirements.txt
-      - save_cache:
-          key: dev-{{ .Branch }}-{{ checksum "requirements.txt" }}
-          paths:
-            - "venv"
-  test:
-    docker:
-      - image: python:3.8.1-slim-buster
-        environment:
-          APP_SETTINGS: config.DevelopmentConfig
-          DATABASE_URL: postgresql://root:casting@localhost/castingapi_test
-          AUTH0_DOMAIN: dev-hrmvva9b.us.auth0.com
-          ALGORITHMS: RS256
-          API_AUDIENCE: casting
-      - image: postgres:12-alpine
-        environment:
-          POSTGRES_USER: root
-          POSTGRES_PASSWORD: "casting"
-          POSTGRES_DB: castingapi_test
-    steps:
-      - checkout
-      - restore_cache:
-          key: dev-{{ .Branch }}-{{ checksum "requirements.txt" }}
-      - run: 
-          name: Install Dependencies
-          command: |
-            apt-get update
-            pip3 install --upgrade pip
-      - run:
-          name: Install Python deps in a venv
-          command: |
-            python3 -m venv venv
-            . venv/bin/activate
-            pip install -r requirements.txt
-      - save_cache:
-          key: dev-{{ .Branch }}-{{ checksum "requirements.txt" }}
-          paths:
-            - "venv"
       - run:
           name: populate test cases
           command: |
             . venv/bin/activate
             python3 manage.py db upgrade
             python3 test_case.py
+      - run:
+          name: test by tokens
+          command: |
+            . venv/bin/activate
+            python3 test_app_by_assistant_token.py
+            python3 test_app_by_director_token.py
+            python3 test_app_by_producer_token.py
 
 workflows:
   castingapi_workflows:
     jobs:
       - build
-      - test:
-          requires:
-            - build

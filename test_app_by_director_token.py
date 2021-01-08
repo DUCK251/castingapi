@@ -317,6 +317,14 @@ class AppTestCase(unittest.TestCase):
         self.assertTrue(data['success'])
         self.assertEqual(len(data['movies']), 4)
 
+    def test_get_roles(self):
+        res = self.client().get('/roles?page=2')
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(data['page'], 2)
+        self.assertTrue(data['success'])
+
     def test_get_roles_of_movie(self):
         new_movie = Movie(**AppTestCase.test_movie)
         new_movie.insert()

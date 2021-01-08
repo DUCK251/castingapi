@@ -191,7 +191,7 @@ Setting the `DATABASE_URL` variable will set `SQLALCHEMY_DATABASE_URI` in config
     - Fetches a dictionary of movies
     - Query parameters are `title`, `min_release_date`, `max_release_date`, `release_date`, `comapny`, `description`, `search_term`, `page`, `page_size`
     - `search_term` is for title search and it is case insensitive.
-    - Returns : movies, total_movies, success
+    - Returns : movies, total_movies, success, page
     - The return `movies` is paginated with pagesize and `total_movies` is the number of movies without pagination. (default page is 1 and default page_size is 10)
 - Request
 ```
@@ -272,7 +272,8 @@ curl http://127.0.0.1:5000/movies?min_release_date=2022-01-01
       "title": "Fake Movie"
     }
   ], 
-  "success": true, 
+  "success": true,
+  "page": 1,
   "total_movies": 11
 }
 ```
@@ -289,7 +290,7 @@ curl http://127.0.0.1:5000/movies/1/roles
 - Response
 ```
 {
-  "id": 1,
+  "movie_id": 1,
   "roles": [
     {
       "actor_id": null,
@@ -298,7 +299,6 @@ curl http://127.0.0.1:5000/movies/1/roles
       "id": 1,
       "max_age": 30,
       "min_age": 25,
-      "movie_id": 1,
       "name": "kimmich"
     },
     {
@@ -308,7 +308,6 @@ curl http://127.0.0.1:5000/movies/1/roles
       "id": 2,
       "max_age": 35,
       "min_age": 30,
-      "movie_id": 1,
       "name": "revan"
     }
   ],
@@ -461,7 +460,8 @@ curl http://127.0.0.1:5000/roles?gender=male
       "actor_id": null, 
       "name": "park"
     }
-  ], 
+  ],
+  "page": 1,
   "success": true, 
   "total_roles": 5
 }
@@ -638,7 +638,8 @@ curl http://127.0.0.1:5000/actors?ethnicity=asian&gender=female
       "phone": "+1-202-555-0169"
     }
   ], 
-  "success": true, 
+  "success": true,
+  "page": 1,
   "total_actors": 1
 }
 ```
@@ -647,7 +648,7 @@ curl http://127.0.0.1:5000/actors?ethnicity=asian&gender=female
 
 - General:
     - Fetches a dictionary of roles of an actor
-    - Returns : roles, id, success
+    - Returns : roles, actor_id, success
 - Request
 ```
 curl http://127.0.0.1:5000/actors/1/roles
@@ -655,10 +656,9 @@ curl http://127.0.0.1:5000/actors/1/roles
 - Response
 ```
 {
-  "id": 1,
+  "actor_id": 1,
   "roles": [
     {
-      "actor_id": 1,
       "description": null,
       "gender": "male",
       "id": 1,
@@ -668,7 +668,6 @@ curl http://127.0.0.1:5000/actors/1/roles
       "name": "kimmich"
     },
     {
-      "actor_id": 1,
       "description": null,
       "gender": "male",
       "id": 2,

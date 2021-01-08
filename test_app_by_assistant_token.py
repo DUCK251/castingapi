@@ -186,6 +186,14 @@ class AppTestCase(unittest.TestCase):
 
         new_actor.delete()
 
+    def test_get_movies(self):
+        res = self.client().get('/movies?page=2')
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(data['page'], 2)
+        self.assertTrue(data['success'])
+
     def test_get_movies_by_id(self):
         new_movie = Movie(**AppTestCase.test_movie)
         new_movie.insert()

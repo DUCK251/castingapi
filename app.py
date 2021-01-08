@@ -69,11 +69,12 @@ def index():
 def get_actors():
     try:
         actor_filter = Actorfilter(request.args.to_dict(flat=False))
-        total_actors_count, actors = actor_filter.get_results()
+        total_actors_count, page, actors = actor_filter.get_results()
         actors = [actor.format() for actor in actors]
         return jsonify({
             'success': True,
             'actors': actors,
+            'page': page,
             'total_actors': total_actors_count,
         })
     except Exception:
@@ -179,11 +180,12 @@ def delete_actor(payload, actor_id):
 def get_movies():
     try:
         movie_filter = Moviefilter(request.args.to_dict(flat=False))
-        total_movies_count, movies = movie_filter.get_results()
+        total_movies_count, page, movies = movie_filter.get_results()
         movies = [movie.format() for movie in movies]
         return jsonify({
             'success': True,
             'movies': movies,
+            'page': page,
             'total_movies': total_movies_count,
         })
     except Exception:
@@ -290,11 +292,12 @@ def delete_movie(payload, movie_id):
 def get_roles():
     try:
         role_filter = Rolefilter(request.args.to_dict(flat=False))
-        total_roles_count, roles = role_filter.get_results()
+        total_roles_count, page, roles = role_filter.get_results()
         roles = [role.format() for role in roles]
         return jsonify({
             'success': True,
             'roles': roles,
+            'page': page,
             'total_roles': total_roles_count,
         })
     except Exception:

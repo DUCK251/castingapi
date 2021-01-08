@@ -60,6 +60,14 @@ class AppTestCase(unittest.TestCase):
         for actor in actors:
             actor.delete()
 
+    def test_get_actors(self):
+        res = self.client().get('/actors')
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 200)
+        self.assertTrue(data['success'])
+        self.assertTrue(data['page'] == 1)
+
     def test_get_actors_filtered_by_two_id(self):
         actor_one = Actor(**AppTestCase.test_actor)
         actor_one.insert()
@@ -74,6 +82,7 @@ class AppTestCase(unittest.TestCase):
 
         self.assertEqual(res.status_code, 200)
         self.assertTrue(data['success'])
+        self.assertTrue(data['page'] == 1)
         self.assertTrue(data['total_actors'] == 2)
         self.assertTrue(data['actors'][0]['id'] in actor_id_list)
         self.assertTrue(data['actors'][1]['id'] in actor_id_list)

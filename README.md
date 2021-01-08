@@ -400,7 +400,7 @@ curl \
 - General:
     - Fetches a dictionary of roles
     - Query parameters are `movie_id`, `actor_id`, `name`, `gender`, `min_age`, `max_age`, `description`, `page`, `page_size`
-    - Returns : roles, total_roles, success
+    - Returns : roles, total_roles, success, page
     - The return `roles` is paginated with pagesize and `total_roles` is the number of roles without pagination. (default page is 1 and default page_size is 10)
 - Request
 ```
@@ -609,7 +609,7 @@ BODY_TYPE = [
     - Fetches a dictionary of actors
     - Query parameters are `name`, `age`, `min_age`, `max_age`, `gender`, `location`, `passport`, `driver_license`, `ethnicity`, `hair_color`, `eye_color`, `body_type`, `height`, `min_height`, `max_height`, `description`, `image_link`, `phone`, `email`, `search_term`, `page`, `page_size`.
     - By `search_term` query parameter, we are able to search name.
-    - Returns : actors, success
+    - Returns : actors, success, page, total_actors
     - The return `actors` is paginated with pagesize and `total_actors` is the number of actors without pagination. (default page is 1 and default page_size is 10)
 - Request
 ```

@@ -127,13 +127,20 @@ class AppTestCase(unittest.TestCase):
         new_actor = Actor(**AppTestCase.test_actor)
         new_actor.insert()
         actor_id = new_actor.id
+        new_movie = Movie(**AppTestCase.test_movie)
+        new_movie.insert()
+        new_role = Role(**AppTestCase.test_role)
+        new_role.movie = new_movie
+        new_role.actor = new_actor
+        new_role.insert()
 
         res = self.client().get(f'/actors/{actor_id}/roles')
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 200)
         self.assertTrue(data['success'])
-        self.assertEqual(data['id'], actor_id)
+        self.assertEqual(data['actor_id'], actor_id)
+        self.assertTrue('actor_id' not in data['roles'][0])
 
     def test_error_get_roles_of_actor_by_invalid_id(self):
         actor_id = 987654321
@@ -328,13 +335,17 @@ class AppTestCase(unittest.TestCase):
         new_movie = Movie(**AppTestCase.test_movie)
         new_movie.insert()
         movie_id = new_movie.id
+        new_role = Role(**AppTestCase.test_role)
+        new_role.movie = new_movie
+        new_role.insert()
 
         res = self.client().get(f'/movies/{movie_id}/roles')
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 200)
         self.assertTrue(data['success'])
-        self.assertEqual(data['id'], movie_id)
+        self.assertTrue('movie_id' not in data['roles'][0])
+        self.assertEqual(data['movie_id'], movie_id)
 
     def test_error_get_roles_of_movie_by_invalid_id(self):
         movie_id = 987654321

@@ -91,7 +91,7 @@ class Basefilter:
         total_count = self.query.count()
         page = page - 1
         ret = self.query.limit(page_size).offset(page * page_size).all()
-        return total_count, ret
+        return total_count, page+1, ret
 
     def get_results(self):
         self.filter()

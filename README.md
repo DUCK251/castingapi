@@ -282,7 +282,7 @@ curl http://127.0.0.1:5000/movies?min_release_date=2022-01-01
 
 - General:
     - Fetches a dictionary of roles of a movie
-    - Returns : roles, id, success
+    - Returns : roles, movie_id, success
 - Request
 ```
 curl http://127.0.0.1:5000/movies/1/roles

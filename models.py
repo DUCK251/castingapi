@@ -335,6 +335,28 @@ class Role(BaseModel):
             'description': self.description,
         }
 
+    def format_without_movie_id(self):
+        return {
+            'id': self.id,
+            'actor_id': self.actor_id,
+            'name': self.name,
+            'gender': self.gender,
+            'min_age': self.min_age,
+            'max_age': self.max_age,
+            'description': self.description,
+        }
+
+    def format_without_actor_id(self):
+        return {
+            'id': self.id,
+            'movie_id': self.movie_id,
+            'name': self.name,
+            'gender': self.gender,
+            'min_age': self.min_age,
+            'max_age': self.max_age,
+            'description': self.description,
+        }
+
     @validates('movie_id')
     def validate_movie_id(self, key, movie_id):
         if movie_id is None:

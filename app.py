@@ -94,10 +94,10 @@ def get_roles_of_actor(actor_id):
             'message': str(e)
         }), 422
     try:
-        roles = [role.format() for role in actor.roles]
+        roles = [role.format_without_actor_id() for role in actor.roles]
         return jsonify({
             'success': True,
-            'id': actor_id,
+            'actor_id': actor_id,
             'roles': roles
         })
     except Exception:
@@ -205,10 +205,10 @@ def get_roles_of_movie(movie_id):
             'message': str(e)
         }), 422
     try:
-        roles = [role.format() for role in movie.roles]
+        roles = [role.format_without_movie_id() for role in movie.roles]
         return jsonify({
             'success': True,
-            'id': movie_id,
+            'movie_id': movie_id,
             'roles': roles
         })
     except Exception:
